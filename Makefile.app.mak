@@ -1,5 +1,5 @@
 #
-# Generic makefile for library projects.
+# Generic makefile for application projects.
 #
 # Copyright (C) 2016 Sergey Kolevatov
 #
@@ -28,62 +28,62 @@ endif
 
 ###################################################################
 
-include Makefile.lib.config
+include Makefile.app.config
 
-ifndef LIB_PROJECT
-    $(error LIB_PROJECT is not set)
+ifndef APP_PROJECT
+    $(error APP_PROJECT is not set)
 endif
 
-ifndef LIB_SRCC
+ifndef APP_SRCC
     $(error APP_SRCC is not set)
 endif
 
 ###################################################################
 
-ifdef LIB_EXT_LIB_NAMES
+ifdef APP_EXT_LIB_NAMES
 include $(MAKETOOLS_PATH)/Makefile.extlibs.mak
 endif
 
 ###################################################################
 
-LIB_TARGET=lib$(LIB_PROJECT).a
+TARGET=$(APP_PROJECT)
 
-LIB_INCL      += $(LIB_INCL_PATH) $(THIRDPARTY_INCL_PATH) -I.
-LIB_LIBS      += $(THIRDPARTY_LIBS)
-LIB_LIBS_PATH += $(THIRDPARTY_LIBS_PATH)
+APP_INCL      = $(APP_INCL_PATH) $(THIRDPARTY_INCL_PATH) -I.
+#LIBS      +=
+#LIBS_PATH +=
 
 ###################################################################
 
-OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(LIB_SRCC))
-OBJS:= $(patsubst %.cpp, $(OBJDIR)/%.o, $(OBJS))
+APP_OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(APP_SRCC))
+APP_OBJS:= $(patsubst %.cpp, $(OBJDIR)/%.o, $(APP_OBJS))
 
-lib: $(LIB_TARGET)
+app: $(TARGET)
 
-$(LIB_TARGET): $(BINDIR) $(BINDIR)/$(LIB_TARGET)
+$(TARGET): $(BINDIR) $(BINDIR)/$(TARGET)
+	ln -sf $(BINDIR)/$(TARGET) $(TARGET)
 	@echo "$@ uptodate - ${MODE}"
-
-$(BINDIR)/$(LIB_TARGET): $(OBJS)
-	$(AR) $@ $(OBJS)
-	-@ ($(RANLIB) $@ || true) >/dev/null 2>&1
 
 $(OBJDIR)/%.o: %.cpp
 	@echo compiling $<
-	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(LIB_INCL)
+	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(APP_INCL)
 
 $(OBJDIR)/%.o: %.c
 	@echo compiling $<
-	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(LIB_INCL)
+	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(APP_INCL)
 
-$(LIB_EXT_LIB_NAMES):
+$(BINDIR)/$(TARGET): $(OBJDIR)/$(TARGET).o $(APP_OBJS) $(APP_EXT_LIB_NAMES)
+	$(CC) $(CFLAGS) -o $@ $(OBJDIR)/$(TARGET).o $(LFLAGS) $(APP_INCL) $(APP_LIBS) $(APP_LIBS_PATH) $(THIRDPARTY_LIBS) $(THIRDPARTY_LIBS_PATH)
+
+$(APP_EXT_LIB_NAMES):
 	make -C ../$@
 
 $(BINDIR):
 	@ mkdir -p $(OBJDIR)
 	@ mkdir -p $(BINDIR)
 
-lib_clean:
-	rm $(OBJDIR)/*.o $(BINDIR)/$(LIB_TARGET)
+app_clean:
+	rm $(OBJDIR)/*.o $(BINDIR)/$(TARGET)
 
-lib_cleanall: lib_clean
+app_cleanall: app_clean
 
-#.PHONY: all $(MY_LIB_NAMES)
+.PHONY: all $(MY_LIB_NAMES)

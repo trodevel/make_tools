@@ -18,31 +18,53 @@
 #
 #
 
-# $Revision: 5418 $ $Date:: 2016-12-30 #$ $Author: serge $
+# $Revision: 5435 $ $Date:: 2017-01-02 #$ $Author: serge $
 
 
 ###################################################################
-
-ifndef EXT_LIB_NAMES
-    $(error EXT_LIB_NAMES is not set)
-endif
 
 ifndef BINDIR
     $(error BINDIR is not set)
 endif
 
 ###################################################################
-
-EXT_INCL_PATH=-I..
-EXT_LIBS_PATH=$(patsubst %,-L../%/$(BINDIR),$(EXT_LIB_NAMES))
-EXT_LIBS = $(patsubst %,-l%,$(EXT_LIB_NAMES))
+ifndef LIB_EXT_LIB_NAMES
+    ifndef APP_EXT_LIB_NAMES
+	$(error neither LIB_EXT_LIB_NAMES nor APP_EXT_LIB_NAMES is set)
+    endif
+endif
 
 ###################################################################
+
+ifdef LIB_EXT_LIB_NAMES
+
+LIB_EXT_INCL_PATH=-I..
+LIB_EXT_LIBS_PATH=$(patsubst %,-L../%/$(BINDIR),$(LIB_EXT_LIB_NAMES))
+LIB_EXT_LIBS = $(patsubst %,-l%,$(LIB_EXT_LIB_NAMES))
+
 # update paths
 
-INCL_PATH += $(EXT_INCL_PATH)
+LIB_INCL_PATH += $(LIB_EXT_INCL_PATH)
+LIB_LIBS      += $(LIB_EXT_LIBS)
+LIB_LIBS_PATH += $(LIB_EXT_LIBS_PATH)
 
-LIBS      += $(EXT_LIBS)
-LIBS_PATH += $(EXT_LIBS_PATH)
+endif
+
+###################################################################
+
+ifdef APP_EXT_LIB_NAMES
+
+APP_EXT_INCL_PATH=-I..
+APP_EXT_LIBS_PATH=$(patsubst %,-L../%/$(BINDIR),$(APP_EXT_LIB_NAMES))
+APP_EXT_LIBS = $(patsubst %,-l%,$(APP_EXT_LIB_NAMES))
+
+APP_INCL_PATH += $(APP_EXT_INCL_PATH)
+APP_LIBS      += $(APP_EXT_LIBS)
+APP_LIBS_PATH += $(APP_EXT_LIBS_PATH)
+
+endif
+
+###################################################################
+
 
 ###################################################################
