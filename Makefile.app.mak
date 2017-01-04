@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 5435 $ $Date:: 2017-01-02 #$ $Author: serge $
+# $Revision: 5442 $ $Date:: 2017-01-03 #$ $Author: serge $
 
 ###################################################################
 
@@ -52,6 +52,11 @@ APP_INCL      = $(APP_INCL_PATH) $(THIRDPARTY_INCL_PATH) -I.
 #LIBS      +=
 #LIBS_PATH +=
 
+ifdef LIB_PROJECT
+MY_LIB          = -l$(LIB_PROJECT)
+MY_LIB_PATH     = -L$(BINDIR)
+endif
+
 ###################################################################
 
 APP_OBJS = $(patsubst %.c, $(OBJDIR)/%.o, $(APP_SRCC))
@@ -72,7 +77,7 @@ $(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(APP_INCL)
 
 $(BINDIR)/$(TARGET): $(OBJDIR)/$(TARGET).o $(APP_OBJS) $(APP_EXT_LIB_NAMES)
-	$(CC) $(CFLAGS) -o $@ $(OBJDIR)/$(TARGET).o $(LFLAGS) $(APP_INCL) $(APP_LIBS) $(APP_LIBS_PATH) $(THIRDPARTY_LIBS) $(THIRDPARTY_LIBS_PATH)
+	$(CC) $(CFLAGS) -o $@ $(OBJDIR)/$(TARGET).o $(LFLAGS) $(APP_INCL) $(APP_LIBS) $(APP_LIBS_PATH) $(THIRDPARTY_LIBS) $(THIRDPARTY_LIBS_PATH) $(MY_LIB) $(MY_LIB_PATH)
 
 $(APP_EXT_LIB_NAMES):
 	make -C ../$@
