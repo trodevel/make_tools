@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 5431 $ $Date:: 2017-01-02 #$ $Author: serge $
+# $Revision: 5489 $ $Date:: 2017-01-05 #$ $Author: serge $
 
 ###################################################################
 
@@ -34,14 +34,14 @@ ifeq "$(MODE)" "debug"
     OBJDIR=./DBG
     BINDIR=./DBG
 
-    CFLAGS := -Wall -std=c++0x -ggdb -g3
-    LFLAGS := -Wall -lstdc++ -lrt -ldl -lm -pthread -g
+    CFLAGS += -Wall -std=c++0x -ggdb -g3
+    LFLAGS += -Wall -lstdc++ -lrt -ldl -lm -pthread -g
 else
     OBJDIR=./OPT
     BINDIR=./OPT
 
-    CFLAGS := -Wall -std=c++0x
-    LFLAGS := -Wall -lstdc++ -lrt -ldl -lm -pthread
+    CFLAGS += -Wall -std=c++0x
+    LFLAGS += -Wall -lstdc++ -lrt -ldl -lm -pthread
 endif
 
 ###################################################################
@@ -50,21 +50,28 @@ include $(MAKETOOLS_PATH)/Makefile.inc
 
 ###################################################################
 
+
 ifneq ("$(wildcard Makefile.lib.config)","")
     ifneq ("$(wildcard Makefile.app.config)","")
+
 all: lib app
 clean: lib_clean app_clean
 cleanall: lib_cleanall app_cleanall
+
     else
+
 all: lib
 clean: lib_clean
 cleanall: lib_cleanall
+
     endif
 else
     ifneq ("$(wildcard Makefile.app.config)","")
+
 all: app
 clean: app_clean
 cleanall: app_cleanall
+
     else
         $(error cannot define target)
     endif
@@ -83,6 +90,16 @@ endif
 ifneq ("$(wildcard Makefile.app.config)","")
     include Makefile.app.config
     include $(MAKETOOLS_PATH)/Makefile.app.mak
+endif
+
+###################################################################
+
+ifdef LIB_BOOST_LIB_NAMES
+    include $(MAKETOOLS_PATH)/Makefile.boost.mak
+endif
+
+ifdef APP_BOOST_LIB_NAMES
+    include $(MAKETOOLS_PATH)/Makefile.boost.mak
 endif
 
 ###################################################################

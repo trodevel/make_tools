@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 5442 $ $Date:: 2017-01-03 #$ $Author: serge $
+# $Revision: 5485 $ $Date:: 2017-01-05 #$ $Author: serge $
 
 ###################################################################
 
@@ -48,7 +48,7 @@ endif
 
 TARGET=$(APP_PROJECT)
 
-APP_INCL      = $(APP_INCL_PATH) $(THIRDPARTY_INCL_PATH) -I.
+APP_INCL      = $(APP_INCL_PATH) $(APP_THIRDPARTY_INCL_PATH) -I.
 #LIBS      +=
 #LIBS_PATH +=
 
@@ -77,7 +77,7 @@ $(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(APP_INCL)
 
 $(BINDIR)/$(TARGET): $(OBJDIR)/$(TARGET).o $(APP_OBJS) $(APP_EXT_LIB_NAMES)
-	$(CC) $(CFLAGS) -o $@ $(OBJDIR)/$(TARGET).o $(LFLAGS) $(APP_INCL) $(APP_LIBS) $(APP_LIBS_PATH) $(THIRDPARTY_LIBS) $(THIRDPARTY_LIBS_PATH) $(MY_LIB) $(MY_LIB_PATH)
+	$(CC) $(CFLAGS) -o $@ $(OBJDIR)/$(TARGET).o $(LFLAGS) $(APP_INCL) $(MY_LIB) $(APP_LIBS) $(APP_THIRDPARTY_LIBS) $(MY_LIB_PATH) $(APP_LIBS_PATH) $(APP_THIRDPARTY_LIBS_PATH)
 
 $(APP_EXT_LIB_NAMES):
 	make -C ../$@
@@ -87,8 +87,12 @@ $(BINDIR):
 	@ mkdir -p $(BINDIR)
 
 app_clean:
-	rm $(OBJDIR)/*.o $(BINDIR)/$(TARGET)
+	-rm $(OBJDIR)/*.o $(BINDIR)/$(TARGET)
 
-app_cleanall: app_clean
+app_cleanall: app_clean $(APP_CLEAN_EXT_LIBS)
+
+$(APP_CLEAN_EXT_LIBS):
+	@echo dir_clean ../$@ = $(subst _clean,,$@)
+	-make -C ../$(subst _clean,,$@) clean
 
 .PHONY: all $(MY_LIB_NAMES)

@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 5435 $ $Date:: 2017-01-02 #$ $Author: serge $
+# $Revision: 5484 $ $Date:: 2017-01-05 #$ $Author: serge $
 
 ###################################################################
 
@@ -48,9 +48,9 @@ endif
 
 LIB_TARGET=lib$(LIB_PROJECT).a
 
-LIB_INCL      += $(LIB_INCL_PATH) $(THIRDPARTY_INCL_PATH) -I.
-LIB_LIBS      += $(THIRDPARTY_LIBS)
-LIB_LIBS_PATH += $(THIRDPARTY_LIBS_PATH)
+LIB_INCL      += $(LIB_INCL_PATH) $(LIB_THIRDPARTY_INCL_PATH) -I.
+LIB_LIBS      += $(LIB_THIRDPARTY_LIBS)
+LIB_LIBS_PATH += $(LIB_THIRDPARTY_LIBS_PATH)
 
 ###################################################################
 
@@ -74,15 +74,12 @@ $(OBJDIR)/%.o: %.c
 	@echo compiling $<
 	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(LIB_INCL)
 
-$(LIB_EXT_LIB_NAMES):
-	make -C ../$@
-
 $(BINDIR):
 	@ mkdir -p $(OBJDIR)
 	@ mkdir -p $(BINDIR)
 
 lib_clean:
-	rm $(OBJDIR)/*.o $(BINDIR)/$(LIB_TARGET)
+	-rm $(OBJDIR)/*.o $(BINDIR)/$(LIB_TARGET)
 
 lib_cleanall: lib_clean
 

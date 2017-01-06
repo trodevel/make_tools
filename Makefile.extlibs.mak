@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 5435 $ $Date:: 2017-01-02 #$ $Author: serge $
+# $Revision: 5488 $ $Date:: 2017-01-05 #$ $Author: serge $
 
 
 ###################################################################
@@ -61,6 +61,10 @@ APP_EXT_LIBS = $(patsubst %,-l%,$(APP_EXT_LIB_NAMES))
 APP_INCL_PATH += $(APP_EXT_INCL_PATH)
 APP_LIBS      += $(APP_EXT_LIBS)
 APP_LIBS_PATH += $(APP_EXT_LIBS_PATH)
+
+APP_CLEAN_EXT_LIBS=$(addsuffix _clean,$(APP_EXT_LIB_NAMES))
+
+#$(info APP_CLEAN_EXT_LIBS = $(APP_CLEAN_EXT_LIBS))
 
 endif
 
