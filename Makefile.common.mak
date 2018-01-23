@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 5489 $ $Date:: 2017-01-05 #$ $Author: serge $
+# $Revision: 8615 $ $Date:: 2018-01-23 #$ $Author: serge $
 
 ###################################################################
 
@@ -79,6 +79,9 @@ endif
 
 ###################################################################
 
+include $(MAKETOOLS_PATH)/Makefile.detect.mak
+
+###################################################################
 
 ifneq ("$(wildcard Makefile.lib.config)","")
     include Makefile.lib.config
