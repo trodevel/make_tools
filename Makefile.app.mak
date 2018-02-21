@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 5526 $ $Date:: 2017-01-10 #$ $Author: serge $
+# $Revision: 8723 $ $Date:: 2018-02-20 #$ $Author: serge $
 
 ###################################################################
 
@@ -64,7 +64,7 @@ APP_OBJS:= $(patsubst %.cpp, $(OBJDIR)/%.o, $(APP_OBJS))
 
 app: $(TARGET)
 
-$(TARGET): $(BINDIR) $(BINDIR)/$(TARGET)
+$(TARGET): app_mkdir $(BINDIR)/$(TARGET)
 	ln -sf $(BINDIR)/$(TARGET) $(TARGET)
 	@echo "$@ uptodate - ${MODE}"
 
@@ -82,12 +82,17 @@ $(BINDIR)/$(TARGET): $(OBJDIR)/$(TARGET).o $(APP_OBJS) $(APP_EXT_LIB_NAMES)
 $(APP_EXT_LIB_NAMES):
 	make -C ../$@
 
-$(BINDIR):
+app_mkdir:
 	@ mkdir -p $(OBJDIR)
 	@ mkdir -p $(BINDIR)
 
 app_clean:
-	-rm $(OBJDIR)/*.o $(BINDIR)/$(TARGET)
+	-@ if test -n "`find $(OBJDIR) -maxdepth 1 -name '*.o' -print -quit)`"; then echo "APP: $(LIB_PROJECT): cleaning obj"; rm $(OBJDIR)/*.o; else echo "APP: $(LIB_PROJECT): obj already cleaned"; fi
+ifneq ("$(wildcard "$(BINDIR)/$(TARGET)")","")
+	-@rm $(BINDIR)/$(TARGET)
+endif
+#	-@ [ -d $(OBJDIR) ] && rmdir $(OBJDIR) || echo "not found $(OBJDIR)"	# no need to remove directories up to now
+#	-@ [ -d $(BINDIR) ] && rmdir $(BINDIR) || echo "not found $(BINDIR)"
 
 app_cleanall: app_clean $(APP_CLEAN_EXT_LIBS)
 

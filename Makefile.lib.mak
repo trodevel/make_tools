@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 5526 $ $Date:: 2017-01-10 #$ $Author: serge $
+# $Revision: 8723 $ $Date:: 2018-02-20 #$ $Author: serge $
 
 ###################################################################
 
@@ -59,7 +59,7 @@ OBJS:= $(patsubst %.cpp, $(OBJDIR)/%.o, $(OBJS))
 
 lib: $(LIB_TARGET)
 
-$(LIB_TARGET): $(BINDIR) $(BINDIR)/$(LIB_TARGET)
+$(LIB_TARGET): lib_mkdir $(BINDIR)/$(LIB_TARGET)
 	@echo "$@ uptodate - ${MODE}"
 
 $(BINDIR)/$(LIB_TARGET): $(OBJS)
@@ -74,12 +74,15 @@ $(OBJDIR)/%.o: %.c
 	@echo compiling $<
 	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(LIB_INCL)
 
-$(BINDIR):
+lib_mkdir:
 	@ mkdir -p $(OBJDIR)
 	@ mkdir -p $(BINDIR)
 
 lib_clean:
-	-rm $(OBJDIR)/*.o $(BINDIR)/$(LIB_TARGET)
+	-@ if test -n "`find $(OBJDIR) -maxdepth 1 -name '*.o' -print -quit)`"; then echo "LIB: $(LIB_PROJECT): cleaning obj"; rm $(OBJDIR)/*.o; else echo "LIB: $(LIB_PROJECT): obj already cleaned"; fi
+ifneq ("$(wildcard "$(BINDIR)/$(LIB_TARGET)")","")
+	-@rm $(BINDIR)/$(LIB_TARGET)
+endif
 
 lib_cleanall: lib_clean
 
