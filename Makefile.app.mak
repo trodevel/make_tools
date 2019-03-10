@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 10302 $ $Date:: 2018-12-21 #$ $Author: serge $
+# $Revision: 10635 $ $Date:: 2019-03-10 #$ $Author: serge $
 
 ###################################################################
 
@@ -77,7 +77,7 @@ $(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) -DPIC -c -o $@ $< $(APP_INCL)
 
 $(BINDIR)/$(TARGET): $(OBJDIR)/$(TARGET).o $(APP_OBJS) $(APP_EXT_LIB_NAMES)
-	$(CC) $(CFLAGS) -o $@ $(APP_OBJS) $(LFLAGS) $(APP_INCL) $(MY_LIB) $(APP_LIBS) $(APP_THIRDPARTY_LIBS) $(MY_LIB_PATH) $(APP_LIBS_PATH) $(APP_THIRDPARTY_LIBS_PATH)
+	$(CC) $(CFLAGS) -o $@ $(APP_OBJS) $(APP_INCL) $(MY_LIB) $(APP_LIBS) $(APP_THIRDPARTY_LIBS) $(MY_LIB_PATH) $(APP_LIBS_PATH) $(APP_THIRDPARTY_LIBS_PATH) $(LFLAGS)
 
 $(APP_EXT_LIB_NAMES):
 	make -C ../$@
