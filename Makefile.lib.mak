@@ -18,7 +18,7 @@
 #
 #
 
-# $Revision: 8723 $ $Date:: 2018-02-20 #$ $Author: serge $
+# $Revision: 10631 $ $Date:: 2019-03-10 #$ $Author: serge $
 
 ###################################################################
 
@@ -35,7 +35,7 @@ ifndef LIB_PROJECT
 endif
 
 ifndef LIB_SRCC
-    $(error APP_SRCC is not set)
+    $(error LIB_SRCC is not set)
 endif
 
 ###################################################################
